@@ -646,7 +646,7 @@ static void close_connection_to_fs(fcgi_request *fr)
 static const char *process_headers(request_rec *r, fcgi_request *fr)
 {
     char *p, *next, *name, *value;
-    int len, flag;
+    int len, flag, newl;
     int hasLocation = FALSE;
 
     ASSERT(fr->parseHeader == SCAN_CGI_READING_HEADERS);
@@ -661,11 +661,18 @@ static const char *process_headers(request_rec *r, fcgi_request *fr)
     p = (char *)fr->header->elts;
     len = fr->header->nelts;
     flag = 0;
+    newl = 1;
     while(len-- && flag < 2) {
-        switch(*p) {
+	if (newl && !fr->gotCont && strncasecmp(p, "Status: 100", 11) == 0) {
+		fr->gotCont = 1;
+		ap_log_error(FCGI_LOG_WARN_NOERRNO, fcgi_apache_main_server,
+			"FastCGI: JJJ gotCont=1");
+	}
+	switch(*p) {
             case '\r':
                 break;
             case '\n':
+		newl = 1;
                 flag++;
                 break;
             case '\0':
@@ -674,6 +681,7 @@ static const char *process_headers(request_rec *r, fcgi_request *fr)
                 name = "Invalid Character";
                 goto BadHeader;
             default:
+		newl = 0;
                 flag = 0;
                 break;
         }
@@ -1597,6 +1605,7 @@ static int npipe_io(fcgi_request * const fr)
     pool * const rp = r->pool;
     int is_connected = 0;
     DWORD recv_count = 0;
+    int expect_cont = 0;
 
     dynamic_last_io_time.tv_sec = 0;
     dynamic_last_io_time.tv_usec = 0;
@@ -1637,7 +1646,7 @@ static int npipe_io(fcgi_request * const fr)
         {
         case STATE_ENV_SEND:
 
-            if (fcgi_protocol_queue_env(r, fr, &env_status) == 0)
+            if (fcgi_protocol_queue_env(r, fr, &env_status, &expect_cont) == 0)
             {
                 goto SERVER_SEND;
             }
@@ -2010,6 +2019,7 @@ static int socket_io(fcgi_request * const fr)
     env_status env;
     pool *rp = r->pool;
     int is_connected = 0;
+    int expect_cont = 0;
     
     dynamic_last_io_time.tv_sec = 0;
     dynamic_last_io_time.tv_usec = 0;
@@ -2046,7 +2056,7 @@ static int socket_io(fcgi_request * const fr)
         {
         case STATE_ENV_SEND:
 
-            if (fcgi_protocol_queue_env(r, fr, &env) == 0)
+            if (fcgi_protocol_queue_env(r, fr, &env, &expect_cont) == 0)
             {
                 goto SERVER_SEND;
             }
@@ -2056,6 +2066,9 @@ static int socket_io(fcgi_request * const fr)
             /* fall through */
 
         case STATE_CLIENT_RECV:
+	    if (expect_cont && !fr->gotCont) {
+		goto SERVER_SEND;
+	    }
 
             if (read_from_client_n_queue(fr))
             {
@@ -2328,6 +2341,10 @@ SERVER_SEND:
                 state = STATE_ERROR;
                 break;
             }
+	    if (expect_cont && fr->gotCont) {
+		state = STATE_CLIENT_RECV;
+		continue;
+	    }
         }
 
         if (fr->exitStatusSet) 

@@ -221,9 +221,11 @@ static void add_pass_header_vars(fcgi_request *fr)
  * complete ENV was buffered, FALSE otherwise.  Note: envp is updated to
  * reflect the current position in the ENV.
  */
-int fcgi_protocol_queue_env(request_rec *r, fcgi_request *fr, env_status *env)
+int fcgi_protocol_queue_env(request_rec *r, fcgi_request *fr, env_status *env,
+			    int *expect_cont)
 {
     int charCount;
+    const char *name, *val;
 
     if (env->envp == NULL) {
         ap_add_common_vars(r);
@@ -237,15 +239,26 @@ int fcgi_protocol_queue_env(request_rec *r, fcgi_request *fr, env_status *env)
         env->envp = ap_create_environment(r->pool, r->subprocess_env);
         env->pass = PREP;
     }
+    *expect_cont = 0;
 
     while (*env->envp) {
+	ap_log_error(FCGI_LOG_WARN_NOERRNO, fcgi_apache_main_server,
+			"FastCGI: JJJ envp=%s", *env->envp);
         switch (env->pass) 
         {
         case PREP:
             env->equalPtr = strchr(*env->envp, '=');
             ASSERT(env->equalPtr != NULL);
+	    name = *env->envp; 
+	    val = env->equalPtr + 1;
             env->nameLen = env->equalPtr - *env->envp;
             env->valueLen = strlen(++env->equalPtr);
+	    ap_log_error(FCGI_LOG_WARN_NOERRNO, fcgi_apache_main_server,
+			"FastCGI: JJJ name='%.*s' val='%.*s'", env->nameLen, *env->envp, env->valueLen, val);
+	    if (val && env->nameLen == sizeof("HTTP_EXPECT") - 1 &&
+                strncasecmp(name, "HTTP_EXPECT", env->nameLen) == 0 &&
+		strncasecmp(val, "100-continue", env->valueLen) == 0)
+		*expect_cont = 1;
             build_env_header(env->nameLen, env->valueLen, env->headerBuff, &env->headerLen);
             env->totalLen = env->headerLen + env->nameLen + env->valueLen;
             env->pass = HEADER;

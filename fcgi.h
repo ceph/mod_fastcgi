@@ -294,6 +294,7 @@ typedef struct {
     char *fs_stderr;
     int fs_stderr_len;
     int parseHeader;                /* TRUE iff parsing response headers */
+    int gotCont;
     request_rec *r;
     int readingEndRequestBody;
     FCGI_EndRequestBody endRequestBody;
@@ -498,7 +499,7 @@ int fcgi_pm_main(void *dummy, child_info *info);
  */
 void fcgi_protocol_queue_begin_request(fcgi_request *fr);
 void fcgi_protocol_queue_client_buffer(fcgi_request *fr);
-int fcgi_protocol_queue_env(request_rec *r, fcgi_request *fr, env_status *env);
+int fcgi_protocol_queue_env(request_rec *r, fcgi_request *fr, env_status *env, int *expect_cont);
 int fcgi_protocol_dequeue(pool *p, fcgi_request *fr);
 
 /*

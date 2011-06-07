@@ -288,6 +288,7 @@ apcb_t fcgi_config_reset_globals(void* dummy)
     dynamicInitStartDelay = DEFAULT_INIT_START_DELAY;
     dynamicRestartDelay = FCGI_DEFAULT_RESTART_DELAY;
     dynamicMinServerLife = FCGI_DEFAULT_MIN_SERVER_LIFE;
+    dynamicMaxFailedStarts = FCGI_DEFAULT_MAX_FAILED_STARTS;
     dynamic_pass_headers = NULL;
     dynamic_idle_timeout = FCGI_DEFAULT_IDLE_TIMEOUT;
 	dynamicFlush = FCGI_FLUSH;
@@ -695,6 +696,10 @@ const char *fcgi_config_new_static_server(cmd_parms *cmd, void *dummy, const cha
         }
         else if (strcasecmp(option, "-min-server-life") == 0) {
             if ((err = get_u_int(tp, &arg, &s->minServerLife, 0)))
+                return invalid_value(tp, name, NULL, option, err);
+        }
+        else if (strcasecmp(option, "-max-failed-starts") == 0) {
+            if ((err = get_u_int(tp, &arg, &s->maxFailedStarts, 0)))
                 return invalid_value(tp, name, NULL, option, err);
         }
         else if (strcasecmp(option, "-priority") == 0) {
@@ -1121,6 +1126,10 @@ const char *fcgi_config_set_config(cmd_parms *cmd, void *dummy, const char *arg)
         }
         else if (strcasecmp(option, "-min-server-life") == 0) {
             if ((err = get_int(tp, &arg, &dynamicMinServerLife, 0)))
+                return invalid_value(tp, name, NULL, option, err);
+        }
+        else if (strcasecmp(option, "-max-failed-starts") == 0) {
+            if ((err = get_int(tp, &arg, &dynamicMaxFailedStarts, 0)))
                 return invalid_value(tp, name, NULL, option, err);
         }
         else if (strcasecmp(option, "-restart-delay") == 0) {

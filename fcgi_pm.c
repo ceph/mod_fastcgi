@@ -1749,6 +1749,7 @@ void fcgi_pm_main(void *dummy)
 #endif
         unsigned int numChildren;
 		unsigned int minServerLife;
+        unsigned int maxFailedStarts;
 
         /*
          * If we came out of sigsuspend() for any reason other than
@@ -1777,6 +1778,10 @@ void fcgi_pm_main(void *dummy)
                 ? dynamicMinServerLife 
                 : s->minServerLife;
 
+            maxFailedStarts = (s->directive == APP_CLASS_DYNAMIC) 
+                ? dynamicMaxFailedStarts
+                : s->minServerLife;
+
             for (i = 0; i < numChildren; ++i) 
             {
                 if (s->procs[i].pid <= 0 && s->procs[i].state == FCGI_START_STATE)
@@ -1795,7 +1800,7 @@ void fcgi_pm_main(void *dummy)
                         s->procs[i].start_time = 0;
                     }
                     
-                    if (s->numFailures > MAX_FAILED_STARTS)
+                    if (maxFailedStarts && s->numFailures > maxFailedStarts)
                     {
                         time_t last_start_time = s->procs[i].start_time;
 
@@ -1830,7 +1835,7 @@ void fcgi_pm_main(void *dummy)
                                     " running for %d seconds given %d attempts, its restart"
                                     " interval has been backed off to %d seconds",
                                     (s->directive == APP_CLASS_DYNAMIC) ? " (dynamic)" : "",
-                                    s->fs_path, minServerLife, MAX_FAILED_STARTS,
+                                    s->fs_path, minServerLife, s->maxFailedStarts,
                                     FAILED_STARTS_DELAY);
                             }
                             else
@@ -1861,7 +1866,7 @@ void fcgi_pm_main(void *dummy)
                         if (s->bad) 
                         {
                             s->bad = 0;
-                            s->numFailures = MAX_FAILED_STARTS;
+                            s->numFailures = s->maxFailedStarts;
                         }
 
                         if (s->listenFd < 0 && init_listen_sock(s)) 

@@ -152,6 +152,7 @@ u_int dynamicRestartDelay = FCGI_DEFAULT_RESTART_DELAY;
 array_header *dynamic_pass_headers = NULL;
 u_int dynamic_idle_timeout = FCGI_DEFAULT_IDLE_TIMEOUT;
 int dynamicMinServerLife = FCGI_DEFAULT_MIN_SERVER_LIFE;
+int dynamicMaxFailedStarts = FCGI_DEFAULT_MAX_FAILED_STARTS;
 
 /*******************************************************************************
  * Construct a message and write it to the pm_pipe.

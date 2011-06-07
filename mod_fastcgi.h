@@ -39,7 +39,7 @@
  * The number of failed starts that can occur before the application is
  * considered broken and start attempts fall back to FAILED_STARTS_DELAY.
  */
-#define MAX_FAILED_STARTS 3
+#define FCGI_DEFAULT_MAX_FAILED_STARTS 3
 
 /*
  * The number of seconds between attempts to start an application that 

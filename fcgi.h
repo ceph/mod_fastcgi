@@ -215,6 +215,10 @@ typedef struct _FastCgiServerInfo {
                                      * restarts after failure.  Can be zero. */
     u_int minServerLife;            /* minimum number of seconds a server must
                                      * live before it's considered borked. */
+    u_int maxFailedStarts;          /* The number of failed starts that can occur
+				     * before the application is considered broken
+				     * and start attempts fall back to
+				     * failedStartsDelay. */
     int restartOnExit;              /* = TRUE = restart. else terminate/free */
     u_int numFailures;              /* num restarts due to exit failure */
     int bad;                        /* is [not] having start problems */
@@ -620,6 +624,7 @@ extern u_int dynamicRestartDelay;
 extern array_header *dynamic_pass_headers;
 extern u_int dynamic_idle_timeout;
 extern int dynamicMinServerLife;
+extern int dynamicMaxFailedStarts;
 extern int dynamicFlush;
 
 

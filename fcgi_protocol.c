@@ -243,7 +243,7 @@ int fcgi_protocol_queue_env(request_rec *r, fcgi_request *fr, env_status *env,
 
     while (*env->envp) {
 	ap_log_error(FCGI_LOG_WARN_NOERRNO, fcgi_apache_main_server,
-			"FastCGI: JJJ envp=%s", *env->envp);
+			"FastCGI: envp=%s", *env->envp);
         switch (env->pass) 
         {
         case PREP:
@@ -254,10 +254,10 @@ int fcgi_protocol_queue_env(request_rec *r, fcgi_request *fr, env_status *env,
             env->nameLen = env->equalPtr - *env->envp;
             env->valueLen = strlen(++env->equalPtr);
 	    ap_log_error(FCGI_LOG_WARN_NOERRNO, fcgi_apache_main_server,
-			"FastCGI: JJJ name='%.*s' val='%.*s'", env->nameLen, *env->envp, env->valueLen, val);
+			"FastCGI: name='%.*s' val='%.*s'", env->nameLen, *env->envp, env->valueLen, val);
 	    if (val && env->nameLen == sizeof("HTTP_EXPECT") - 1 &&
-                strncasecmp(name, "HTTP_EXPECT", env->nameLen) == 0 &&
-		strncasecmp(val, "100-continue", env->valueLen) == 0)
+                strcasecmp(name, "HTTP_EXPECT") == 0 &&
+                strcasecmp(val, "100-continue") == 0)
 		*expect_cont = 1;
             build_env_header(env->nameLen, env->valueLen, env->headerBuff, &env->headerLen);
             env->totalLen = env->headerLen + env->nameLen + env->valueLen;

@@ -1,3 +1,9 @@
+libapache-mod-fastcgi (2.4.7-1-rgw-2) unstable; urgency=low
+
+  * fix expect-100-continue identification
+
+ -- Yehuda Sadeh <yehuda.sadeh@dreamhost.com>  Tue, 7 Jul 2011 16:13:02 -0800
+
 libapache-mod-fastcgi (2.4.7-1-rgw-1) unstable; urgency=low
 
   * port the upstream version (2.4.7) with DH fixes

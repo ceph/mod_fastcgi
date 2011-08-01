@@ -256,7 +256,7 @@ int fcgi_protocol_queue_env(request_rec *r, fcgi_request *fr, env_status *env,
 	    ap_log_error(FCGI_LOG_WARN_NOERRNO, fcgi_apache_main_server,
 			"FastCGI: name='%.*s' val='%.*s'", env->nameLen, *env->envp, env->valueLen, val);
 	    if (val && env->nameLen == sizeof("HTTP_EXPECT") - 1 &&
-                strcasecmp(name, "HTTP_EXPECT") == 0 &&
+                strncasecmp(name, "HTTP_EXPECT", env->nameLen) == 0 &&
                 strcasecmp(val, "100-continue") == 0)
 		*expect_cont = 1;
             build_env_header(env->nameLen, env->valueLen, env->headerBuff, &env->headerLen);

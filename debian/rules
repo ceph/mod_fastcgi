@@ -1,0 +1,38 @@
+#!/usr/bin/make -f
+
+include /usr/share/cdbs/1/rules/debhelper.mk
+include /usr/share/cdbs/1/class/langcore.mk
+include /usr/share/cdbs/1/class/makefile-vars.mk
+include /usr/share/cdbs/1/rules/dpatch.mk
+
+APACHE2_VERSION=`dpkg -s apache2-prefork-dev apache2-threaded-dev 2>/dev/null |grep Version: | awk '{print $$2}'`
+
+DEB_BUILDDIR = $(CURDIR)/build-tmp
+DEB_BUILDDIR_libapache2-mod-fastcgi = $(DEB_BUILDDIR)/20
+DEB_DESTDIR_libapache2-mod-fastcgi = $(CURDIR)/debian/libapache2-mod-fastcgi
+DEB_FIXPERMS_EXCLUDE = var/lib/apache2/fastcgi var/lib/apache/fastcgi
+
+AP2_MAKE_DEFS = top_dir=/usr/share/apache2 \
+	APXS=apxs2 APACHECTL=apachectl2 \
+	LIBTOOL="libtool --tag=CC" SH_LIBTOOL="libtool --tag=CC" \
+	INCLUDES="-I/usr/include/apache2 `pkg-config --cflags apr-1`"
+
+configure/libapache2-mod-fastcgi::
+	cp -a *.c *.h *.mk .deps $(DEB_BUILDDIR_$(cdbs_curpkg))
+	cp -a Makefile.AP2 $(DEB_BUILDDIR_$(cdbs_curpkg))
+
+build/libapache2-mod-fastcgi::
+	$(DEB_MAKE_INVOKE) -C $(DEB_BUILDDIR_$(cdbs_curpkg)) $(AP2_MAKE_DEFS) -f Makefile.AP2
+
+install/libapache2-mod-fastcgi::
+	mkdir -p $(DEB_DESTDIR_$(cdbs_curpkg))/usr/lib/apache2/modules
+	install -m 644 $(DEB_BUILDDIR_$(cdbs_curpkg))/.libs/mod_fastcgi.so \
+	  $(DEB_DESTDIR_$(cdbs_curpkg))/usr/lib/apache2/modules
+	mkdir -p $(DEB_DESTDIR_$(cdbs_curpkg))/etc/apache2/mods-available
+	install -m 644 debian/fastcgi.load \
+	  $(DEB_DESTDIR_$(cdbs_curpkg))/etc/apache2/mods-available
+	install -m 644 debian/fastcgi.conf2 \
+	  $(DEB_DESTDIR_$(cdbs_curpkg))/etc/apache2/mods-available/fastcgi.conf
+	mkdir -p $(DEB_DESTDIR_$(cdbs_curpkg))/var/lib/apache2/fastcgi
+	chown www-data:www-data $(DEB_DESTDIR_$(cdbs_curpkg))/var/lib/apache2/fastcgi
+	chmod 755 $(DEB_DESTDIR_$(cdbs_curpkg))/var/lib/apache2/fastcgi

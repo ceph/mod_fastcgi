@@ -553,6 +553,15 @@ static int set_nonblocking(const fcgi_request * fr, int nonblocking)
 
 #endif
 
+static void shutdown_connection_to_fs(fcgi_request *fr)
+{
+  if (fr->fd >= 0)
+    {
+        set_nonblocking(fr, FALSE);
+        shutdown(fr->fd, SHUT_WR);
+    }
+}
+
 /*******************************************************************************
  * Close the connection to the FastCGI server.  This is normally called by
  * do_work(), but may also be called as in request pool cleanup.
@@ -878,7 +887,12 @@ static int read_from_client_n_queue(fcgi_request *fr)
         {
             /* set the header scan state to done to prevent logging an error 
              * - hokey approach - probably should be using a unique value */
-            fr->parseHeader = SCAN_CGI_FINISHED;
+
+            /* actually, not setting this here, will set it later,
+               so that we can continue to read the server header if that
+               wasn't done (can happen with 100-continue), so that we
+               can send correct error to client */
+            // fr->parseHeader = SCAN_CGI_FINISHED;
             return -1;
         }
 
@@ -2021,6 +2035,7 @@ static int socket_io(fcgi_request * const fr)
     pool *rp = r->pool;
     int is_connected = 0;
     int expect_cont = 0;
+    int client_error = 0;
     
     dynamic_last_io_time.tv_sec = 0;
     dynamic_last_io_time.tv_usec = 0;
@@ -2073,10 +2088,16 @@ static int socket_io(fcgi_request * const fr)
 
             if (read_from_client_n_queue(fr))
             {
-                state = STATE_CLIENT_ERROR;
-                break;
+                client_error = 1;
+                if (fr->gotCont)
+                {
+                    shutdown_connection_to_fs(fr);
+                    fr->eofSent = 1;
+                } else {
+                  state = STATE_CLIENT_ERROR;
+                  break;
+                }
             }
-
             if (fr->eofSent)
             {
                 state = STATE_SERVER_SEND;
@@ -2266,7 +2287,7 @@ SERVER_SEND:
             }
         }
 
-        if (FD_ISSET(fr->fd, &write_set))
+        if (FD_ISSET(fr->fd, &write_set) && !client_error)
         {
             /* send to the server */
 
@@ -2354,6 +2375,12 @@ SERVER_SEND:
             state = STATE_CLIENT_SEND;
             break;
         }
+    }
+
+    /* was a client side error, don't blame the server */
+    if (client_error)
+    {
+        fr->parseHeader = SCAN_CGI_FINISHED;
     }
     
     return (state == STATE_ERROR);

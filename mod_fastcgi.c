@@ -2400,7 +2400,7 @@ static int do_work(request_rec * const r, fcgi_request * const fr)
 
     if (fr->role == FCGI_RESPONDER) 
     {
-        rv = ap_setup_client_block(r, REQUEST_CHUNKED_ERROR);
+        rv = ap_setup_client_block(r, REQUEST_CHUNKED_DECHUNK);
         if (rv != OK) 
         {
             ap_kill_timeout(r);

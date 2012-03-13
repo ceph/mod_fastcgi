@@ -1,0 +1,244 @@
+libapache-mod-fastcgi (2.4.7~0910052141-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Tatsuki Sugiura <sugi@nemui.org>  Mon, 15 Nov 2010 16:31:58 +0900
+
+libapache-mod-fastcgi (2.4.6-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Tatsuki Sugiura <sugi@nemui.org>  Tue, 18 Mar 2008 11:23:42 +0900
+
+libapache-mod-fastcgi (2.4.2-10) unstable; urgency=low
+
+  * Drop apache1.3 module. (Closes: #429095)
+  * Now this cannot be built with apache2.0.
+
+ -- Tatsuki Sugiura <sugi@nemui.org>  Mon, 28 Jan 2008 15:17:58 +0900
+
+libapache-mod-fastcgi (2.4.2-9) unstable; urgency=low
+
+  * apply authn provider patch for apache2.2.
+    Thanks for Martin Furter (Closes: #414185)
+  * stop build apache 1.3 binary (Closes: #429095)
+  * fix suexec wrapper path (Closes: #415913)
+
+ -- Tatsuki Sugiura <sugi@nemui.org>  Sat, 25 Aug 2007 17:13:50 +0900
+
+libapache-mod-fastcgi (2.4.2-8) unstable; urgency=high
+
+  * transit libapache2-mod-fastcgi for apache2.2
+  * Fix in built-in suexec path (Closes: #331617)
+  * remove unnecessary libc6 version dependency (Closes: #343519)
+  * apply patch to fix that apache2 segv on load (Closes: #343514)
+
+ -- Tatsuki Sugiura <sugi@nemui.org>  Fri,  6 Oct 2006 20:53:21 +0900
+
+libapache-mod-fastcgi (2.4.2-7) unstable; urgency=low
+
+  * Update description. Thanks for Russ Allbery. (Closes: #320246)
+  * a2{en,dis}cmd automatically called in postinst/prerm. (Closes: #320246)
+
+ -- Tatsuki Sugiura <sugi@nemui.org>  Sat,  6 Aug 2005 14:18:30 +0900
+
+libapache-mod-fastcgi (2.4.2-6) unstable; urgency=low
+
+  * fix typo in original document (Closes: #288270)
+  * add config topic in README.Debian (Closes: #298819)
+
+ -- Tatsuki Sugiura <sugi@nemui.org>  Wed, 16 Mar 2005 22:27:02 +0900
+
+libapache-mod-fastcgi (2.4.2-5) unstable; urgency=high
+
+  * SuEXEC setting has been disabled in defualt. (Closes: #275201)
+
+ -- Tatsuki Sugiura <sugi@nemui.org>  Tue, 19 Oct 2004 13:38:17 +0900
+
+libapache-mod-fastcgi (2.4.2-4) unstable; urgency=low
+
+  * Add Documentation
+
+ -- Tatsuki Sugiura <sugi@nemui.org>  Wed,  8 Sep 2004 18:15:05 +0900
+
+libapache-mod-fastcgi (2.4.2-3) unstable; urgency=high
+
+  * Back out the ill-fated apache2 LFS transition.
+  * Bump the apache2-{threaded,prefork}-dev build-dep to (>= 2.0.50-10)
+
+ -- Tatsuki Sugiura <sugi@nemui.org>  Tue, 24 Aug 2004 22:44:11 +0900
+
+libapache-mod-fastcgi (2.4.2-2) unstable; urgency=medium
+
+  * rebuild for new ABI of apache2 2.0.50-9
+
+ -- Tatsuki Sugiura <sugi@nemui.org>  Tue, 17 Aug 2004 15:08:04 +0900
+
+libapache-mod-fastcgi (2.4.2-1) unstable; urgency=low
+
+  * Upstream Release.
+  * New Maintainer (Closes: #229214)
+
+ -- Tatsuki Sugiura <sugi@nemui.org>  Sat, 24 Jul 2004 06:07:47 +0900
+
+libapache-mod-fastcgi (2.4.0-4) unstable; urgency=low
+
+  * QA upload.
+  * libdb4.1-dev build-dependency removed. (Closes: #243017)
+  * Standards-Version updated.
+
+ -- Emanuele Rocca <ema@debian.org>  Tue, 13 Apr 2004 18:09:33 +0200
+
+libapache-mod-fastcgi (2.4.0-3) unstable; urgency=low
+
+  * Orphaned.
+
+ -- Davide Puricelli (evo) <evo@debian.org>  Fri, 23 Jan 2004 19:15:54 +0100
+
+libapache-mod-fastcgi (2.4.0-2) unstable; urgency=low
+
+  * Removed a useless and buggy debian/postrm; closes: #181418.
+
+ -- Davide Puricelli (evo) <evo@debian.org>  Wed, 19 Feb 2003 14:34:24 +0100
+
+libapache-mod-fastcgi (2.4.0-1) unstable; urgency=low
+
+  * New upstream version.
+  * Bumping Standards-Version to 3.5.8.
+  * Enhancing debian/postinst and debian/prerm scripts.
+
+ -- Davide Puricelli (evo) <evo@debian.org>  Thu, 13 Feb 2003 14:21:57 +0100
+
+libapache-mod-fastcgi (2.2.12-4) unstable; urgency=low
+
+  * Fixed debian/rules (gah).
+
+ -- Davide Puricelli (evo) <evo@debian.org>  Fri, 16 Aug 2002 14:45:48 +0200
+
+libapache-mod-fastcgi (2.2.12-3) unstable; urgency=low
+
+  * No longer links against (nonexistent) libdb.so.2.
+
+ -- Davide Puricelli (evo) <evo@debian.org>  Fri, 16 Aug 2002 13:51:36 +0200
+
+libapache-mod-fastcgi (2.2.12-2) unstable; urgency=low
+
+  * Fixed -autoUpdate option, closes: #132981.
+    Patch provided by Freddy Spierenburg <freddy@telegraafnet.nl>
+
+ -- Davide Puricelli (evo) <evo@debian.org>  Sun, 17 Mar 2002 15:32:08 +0100
+
+libapache-mod-fastcgi (2.2.12-1) unstable; urgency=low
+
+  * New upstream version. 
+
+ -- Davide Puricelli (evo) <evo@debian.org>  Sun,  9 Dec 2001 21:07:42 +0000
+
+libapache-mod-fastcgi (2.2.10-3) unstable; urgency=low
+
+  * Now depends on apache-common 1.3.14-2.
+
+ -- Davide Puricelli (evo) <evo@debian.org>  Thu,  7 Dec 2000 19:47:14 +0100
+
+libapache-mod-fastcgi (2.2.10-2) unstable; urgency=low
+
+  * Recompiled against apache-dev 1.3.14-1; closes: #78516, #78629. 
+
+ -- Davide Puricelli (evo) <evo@debian.org>  Sun,  3 Dec 2000 17:44:21 +0100
+
+libapache-mod-fastcgi (2.2.10-1) unstable; urgency=low
+
+  * New upstream version. 
+
+ -- Davide Puricelli (evo) <evo@debian.org>  Tue, 28 Nov 2000 19:40:33 +0100
+
+libapache-mod-fastcgi (2.2.8-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Davide Puricelli (evo) <evo@debian.org>  Mon, 28 Aug 2000 17:46:13 +0200
+
+libapache-mod-fastcgi (2.2.6-2) unstable; urgency=low
+
+  * Further fixed debian/postinst. 
+
+ -- Davide Puricelli (evo) <evo@debian.org>  Tue, 15 Aug 2000 12:06:59 +0200
+
+libapache-mod-fastcgi (2.2.6-1) unstable; urgency=low
+
+  * New upstream version.
+  * New maintainer email address.
+
+ -- Davide Puricelli (evo) <evo@debian.org>  Sat, 12 Aug 2000 11:13:05 +0200
+
+libapache-mod-fastcgi (2.2.4-2) unstable; urgency=low
+
+  * Sponsored upload for Davide Puricelli (evo) <apurice@tin.it>.
+  * Build-Depends: apache, thanks to Christian T. Steigies.
+  * debian/postinst and debian/prerm should work fine with
+    apache-ssl; closes: #58590.
+  * Updated 500mod_fastcgi.info.  
+
+ -- Milan Zamazal <pdm@debian.org>  Sun,  6 Aug 2000 17:32:42 +0200 
+
+libapache-mod-fastcgi (2.2.4-1) unstable; urgency=low
+
+  * Sponsored upload for Davide Puricelli (evo) <apurice@tin.it>.
+
+ -- Milan Zamazal <pdm@debian.org>  Thu, 13 Jul 2000 22:18:12 +0200
+
+libapache-mod-fastcgi (2.2.4-1) unstable; urgency=low
+
+  * New maintainer.
+  * New upstream version.
+  * Build-Depends: apache-dev; closes: #59488.
+
+ -- Davide Puricelli (evo) <apurice@tin.it>  Wed, 21 Jun 2000 18:53:14 +0200
+
+libapache-mod-fastcgi (2.2.2-2) unstable; urgency=low
+
+  * Compiled for Apache 1.3.9; closes: #45272.
+  * FHS.
+  * Standards 3.0.1.
+  * No lintian 1.8.2 errors.
+  * Orphaned.
+
+ -- Milan Zamazal <pdm@debian.org>  Sun, 19 Sep 1999 11:28:28 +0200
+
+libapache-mod-fastcgi (2.2.2-1) unstable; urgency=low
+
+  * New upstream version.
+  * Compiled with egcs/glibc 2.1.
+  * Compiled for Apache 1.3.6; closes: #43499.
+  * debian/rules: get apxs from path again.
+  * debian/500mod_fastcgi.info: Handles, not Handlers.
+  * Compiled with -O2.
+  * No lintian 1.7 errors.
+  * Thanks to Mark Eichin for the fixes.
+
+ -- Milan Zamazal <pdm@debian.org>  Sat, 28 Aug 1999 11:16:03 +0200
+
+libapache-mod-fastcgi (2.2.1-1) unstable; urgency=low
+
+  * New upstream version.
+  * Install upstream changelog.
+
+ -- Milan Zamazal <pdm@debian.org>  Mon, 15 Mar 1999 11:26:11 +0100
+
+libapache-mod-fastcgi (2.1b1-2) unstable; urgency=low
+
+  * Depend on apache-common <<1.3.4; closes: #32505.
+  * Do not use wild cards in debian/docs.
+
+ -- Milan Zamazal <pdm@debian.org>  Mon,  8 Feb 1999 15:30:23 +0100
+
+libapache-mod-fastcgi (2.1b1-1) unstable; urgency=low
+
+  * Initial Release.
+  * Lintian 0.9.5 satisfied.
+
+ -- Milan Zamazal <pdm@debian.org>  Thu, 14 Jan 1999 12:16:50 +0100
+
+Local variables:
+mode: debian-changelog
+End:

@@ -1,3 +1,13 @@
+libapache-mod-fastcgi (2.4.7~0910052141-1-inktank1) quantal; urgency=low
+
+  * From <yehuda.sadeh@inktank.com>
+    - Wait for 100-continue before reading data
+    - configurable max failed starts
+    - propagate client side errors to server
+    - enable chunked input
+
+ -- Dan Mick <dan.mick@inktank.com>  Wed, 23 May 2012 11:25:18 -0700
+
 libapache-mod-fastcgi (2.4.7~0910052141-1) unstable; urgency=low
 
   * New upstream release

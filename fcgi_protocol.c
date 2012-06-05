@@ -226,6 +226,7 @@ int fcgi_protocol_queue_env(request_rec *r, fcgi_request *fr, env_status *env,
 {
     int charCount;
     const char *name, *val;
+    char *uri = "", *remote = "", *auth = "", *method = "";
 
     if (env->envp == NULL) {
         ap_add_common_vars(r);
@@ -242,23 +243,31 @@ int fcgi_protocol_queue_env(request_rec *r, fcgi_request *fr, env_status *env,
     *expect_cont = 0;
 
     while (*env->envp) {
-	ap_log_error(FCGI_LOG_WARN_NOERRNO, fcgi_apache_main_server,
-			"FastCGI: envp=%s", *env->envp);
         switch (env->pass) 
         {
         case PREP:
             env->equalPtr = strchr(*env->envp, '=');
             ASSERT(env->equalPtr != NULL);
-	    name = *env->envp; 
-	    val = env->equalPtr + 1;
+            name = *env->envp;
+            val = env->equalPtr + 1;
             env->nameLen = env->equalPtr - *env->envp;
             env->valueLen = strlen(++env->equalPtr);
-	    ap_log_error(FCGI_LOG_WARN_NOERRNO, fcgi_apache_main_server,
-			"FastCGI: name='%.*s' val='%.*s'", env->nameLen, *env->envp, env->valueLen, val);
-	    if (val && env->nameLen == sizeof("HTTP_EXPECT") - 1 &&
-                strncasecmp(name, "HTTP_EXPECT", env->nameLen) == 0 &&
-                strcasecmp(val, "100-continue") == 0)
-		*expect_cont = 1;
+
+            /* Collect a few interesting variables to log */
+            if (strncasecmp("SCRIPT_URI", *env->envp, env->nameLen) == 0) 
+                uri = env->equalPtr;
+            if (strncasecmp("REMOTE_ADDR", *env->envp, env->nameLen) == 0)
+                remote = env->equalPtr;
+            if (strncasecmp("HTTP_AUTHORIZATION", *env->envp, env->nameLen)
+                == 0)
+            auth = env->equalPtr;
+            if (strncasecmp("REQUEST_METHOD", *env->envp, env->nameLen) == 0)
+                method = env->equalPtr;
+
+            if (val && env->nameLen == sizeof("HTTP_EXPECT") - 1 &&
+                    strncasecmp(name, "HTTP_EXPECT", env->nameLen) == 0 &&
+                    strcasecmp(val, "100-continue") == 0)
+                *expect_cont = 1;
             build_env_header(env->nameLen, env->valueLen, env->headerBuff, &env->headerLen);
             env->totalLen = env->headerLen + env->nameLen + env->valueLen;
             env->pass = HEADER;
@@ -294,6 +303,8 @@ int fcgi_protocol_queue_env(request_rec *r, fcgi_request *fr, env_status *env,
         }
         ++env->envp;
     }
+    ap_log_error(FCGI_LOG_WARN_NOERRNO, fcgi_apache_main_server,
+        "FastCGI: %s %s %s auth %s", remote, method, uri, auth);
 
     if (BufferFree(fr->serverOutputBuffer) < sizeof(FCGI_Header)) {
         return(FALSE);

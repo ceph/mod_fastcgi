@@ -1,3 +1,9 @@
+libapache-mod-fastcgi (2.4.7~0910052141-1-inktank2) unstable; urgency=low
+
+  * Reduce amount of logging
+
+ -- Dan Mick <dan.mick@inktank.com>  Tue, 05 Jun 2012 11:29:43 -0700
+
 libapache-mod-fastcgi (2.4.7~0910052141-1-inktank1) quantal; urgency=low
 
   * From <yehuda.sadeh@inktank.com>
@@ -6,7 +12,7 @@ libapache-mod-fastcgi (2.4.7~0910052141-1-inktank1) quantal; urgency=low
     - propagate client side errors to server
     - enable chunked input
 
- -- Dan Mick <dan.mick@inktank.com>  Wed, 23 May 2012 11:25:18 -0700
+ -- Dan Mick <dan.mick@inktank.com>  Tue, 05 Jun 2012 11:28:33 -0700
 
 libapache-mod-fastcgi (2.4.7~0910052141-1) unstable; urgency=low
 

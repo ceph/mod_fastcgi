@@ -675,8 +675,6 @@ static const char *process_headers(request_rec *r, fcgi_request *fr)
     while(len-- && flag < 2) {
 	if (newl && !fr->gotCont && strncasecmp(p, "Status: 100", 11) == 0) {
 		fr->gotCont = 1;
-		ap_log_error(FCGI_LOG_WARN_NOERRNO, fcgi_apache_main_server,
-			"FastCGI: JJJ gotCont=1");
 	}
 	switch(*p) {
             case '\r':

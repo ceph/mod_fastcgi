@@ -500,7 +500,7 @@ int fcgi_protocol_dequeue(pool *p, fcgi_request *fr)
                             "FastCGI: comm with server \"%s\" aborted: protocol error: "
                             "invalid FCGI_END_REQUEST size: "
                             "%d != sizeof(FCGI_EndRequestBody)(%d)",
-                            fr->fs_path, fr->dataLen, sizeof(FCGI_EndRequestBody));
+                            fr->fs_path, fr->dataLen, (int)sizeof(FCGI_EndRequestBody));
                         return HTTP_INTERNAL_SERVER_ERROR;
                     }
                     fr->readingEndRequestBody = TRUE;
